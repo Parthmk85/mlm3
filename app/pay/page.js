@@ -5,7 +5,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { QrCode, Upload, CheckCircle, Info } from "lucide-react";
 
+import { useLanguage } from "@/components/LanguageContext";
+import { translations } from "@/lib/translations";
+
 export default function PayAndJoin() {
+    const { language } = useLanguage();
+    const t = translations[language];
     const { data: session, status } = useSession();
     const router = useRouter();
 
@@ -45,14 +50,22 @@ export default function PayAndJoin() {
         setMessage("");
 
         try {
-            // 1. Upload to Cloudinary (Simplified for this demo, usually you'd use a server-side route)
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "mlm_uploads"); // User needs to set this up
+            // 1. Upload to Cloudinary via our API route
+            const uploadFormData = new FormData();
+            uploadFormData.append("file", file);
 
-            // Mocking upload for now since I don't have real credentials
-            // In a real app, you'd fetch /api/upload
-            const screenshotURL = "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg";
+            const uploadRes = await fetch("/api/upload", {
+                method: "POST",
+                body: uploadFormData,
+            });
+
+            if (!uploadRes.ok) {
+                const uploadError = await uploadRes.json();
+                throw new Error(uploadError.message || "Failed to upload image");
+            }
+
+            const uploadData = await uploadRes.json();
+            const screenshotURL = uploadData.url;
 
             // 2. Save transaction to DB
             const res = await fetch("/api/transaction", {
@@ -76,7 +89,7 @@ export default function PayAndJoin() {
                 setMessage(data.message || "Failed to submit payment proof");
             }
         } catch (err) {
-            setMessage("An error occurred. Please try again.");
+            setMessage(err.message || "An error occurred. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -98,14 +111,14 @@ export default function PayAndJoin() {
                 <div className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 mb-4">
                     <div className="w-48 h-48 bg-white p-2 rounded-xl shadow-inner mb-4 flex items-center justify-center">
                         <img
-                            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=admin@upi&pn=MLM%20Admin&am=500&cu=INR"
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=admin@upi&pn=MLM%20Admin&am=500&cu=${t.currencyName}`}
                             alt="QR Code"
                             className="w-full h-full"
                         />
                     </div>
                     <p className="text-sm font-bold text-gray-700">UPI ID: admin@upi</p>
-                    <p className="text-xs text-gray-500 mt-1">Amount: ₹500</p>
-                </div>    
+                    <p className="text-xs text-gray-500 mt-1">Amount: {t.currencySymbol}500</p>
+                </div>
 
                 <div className="flex items-start p-3 bg-blue-50 text-blue-700 rounded-xl text-xs">
                     <Info className="mr-2 flex-shrink-0" size={16} />
@@ -168,8 +181,8 @@ export default function PayAndJoin() {
 
                     {message && (
                         <div className={`mt-4 p-3 rounded-xl text-sm border ${message.includes("success") || message.includes("submitted")
-                                ? "bg-green-50 text-green-600 border-green-100"
-                                : "bg-red-50 text-red-600 border-red-100"
+                            ? "bg-green-50 text-green-600 border-green-100"
+                            : "bg-red-50 text-red-600 border-red-100"
                             }`}>
                             {message}
                         </div>

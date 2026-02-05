@@ -38,6 +38,24 @@ export default function VIPPage() {
         return null;
     }
 
+    if (session.user.role === "admin") {
+        return (
+            <div className="bg-[#f0faf2] min-h-screen p-6 flex flex-col items-center justify-center space-y-4">
+                <div className="w-24 h-24 bg-green-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-green-200/50 border-4 border-white animate-bounce-slow">
+                    <Gem size={48} />
+                </div>
+                <h1 className="text-2xl font-black text-gray-800 uppercase tracking-tight text-center">You are VIP Administrator</h1>
+                <p className="text-gray-500 text-center text-sm font-medium">You have full access to the administration panel.</p>
+                <button
+                    onClick={() => router.push("/admin")}
+                    className="mt-6 bg-green-600 text-white px-8 py-3 rounded-2xl font-bold shadow-xl shadow-green-200 active:scale-95 transition-all"
+                >
+                    Go To Admin Panel
+                </button>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-[#f0faf2] min-h-screen p-6 pt-12 pb-24">
             <div className="flex flex-col items-center justify-center space-y-2 mb-10">
@@ -65,13 +83,13 @@ export default function VIPPage() {
                             </div>
 
                             <h3 className="text-xl font-black text-gray-800 mb-6 flex items-baseline gap-1">
-                                {t.investment}: <span className="text-green-600">₹{vip.amount}</span>
+                                {t.investment}: <span className="text-green-600">{t.currencySymbol}{vip.amount}</span>
                             </h3>
 
                             <div className="space-y-4 mb-8">
                                 <div className="flex items-center gap-3 text-sm text-gray-600 font-medium">
                                     <CheckCircle size={18} className="text-green-500" />
-                                    <span>{t.dailyIncome}: <b className="text-gray-900">₹{vip.income}</b></span>
+                                    <span>{t.dailyIncome}: <b className="text-gray-900">{t.currencySymbol}{vip.income}</b></span>
                                 </div>
                                 <div className="flex items-center gap-3 text-sm text-gray-600 font-medium">
                                     <CheckCircle size={18} className="text-green-500" />

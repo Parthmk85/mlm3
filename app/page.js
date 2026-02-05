@@ -47,7 +47,7 @@ const VIPCard = ({ level, amount, locked = true, t }) => (
     </div>
     <div className="p-3">
       <div className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">{t.unlockAmount}</div>
-      <div className={`text-sm font-black ${locked ? 'text-gray-700' : 'text-green-700'}`}>₹{amount.toFixed(2)}</div>
+      <div className={`text-sm font-black ${locked ? 'text-gray-700' : 'text-green-700'}`}>{t.currencySymbol}{amount.toFixed(2)}</div>
       <div className={`text-[10px] mt-1 uppercase font-black tracking-widest flex items-center gap-1 ${locked ? 'text-gray-400' : 'text-green-600'}`}>
         {t.vip} {level} {!locked && <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />}
       </div>
@@ -149,7 +149,7 @@ export default function Home() {
               <div className="bg-green-600 text-white p-0.5 rounded-full">
                 <Wallet size={8} />
               </div>
-              <p className="text-[10px] text-green-700 font-bold">₹{userData?.walletBalance?.toFixed(2) || '0.00'}</p>
+              <p className="text-[10px] text-green-700 font-bold">{t.currencySymbol}{userData?.walletBalance?.toFixed(2) || '0.00'}</p>
             </div>
           </div>
         </div>
@@ -298,7 +298,7 @@ export default function Home() {
               </div>
               <div className="flex-1 text-[11px] font-medium text-gray-600 truncate">{member.email}</div>
               <div className="text-xs font-black text-gray-800 bg-gray-50 px-2 py-1 rounded-lg">
-                +₹{member.amount.toFixed(2)}
+                +{t.currencySymbol}{member.amount.toFixed(2)}
               </div>
             </div>
           ))}

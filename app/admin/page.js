@@ -5,7 +5,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Check, X, ExternalLink, ShieldCheck } from "lucide-react";
 
+import { useLanguage } from "@/components/LanguageContext";
+import { translations } from "@/lib/translations";
+
 export default function AdminDashboard() {
+    const { language } = useLanguage();
+    const tr = translations[language];
     const { data: session, status } = useSession();
     const router = useRouter();
     const [transactions, setTransactions] = useState([]);
@@ -114,7 +119,7 @@ export default function AdminDashboard() {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-green-600 font-black text-sm">₹{t.amount}</p>
+                                        <p className="text-green-600 font-black text-sm">{tr.currencySymbol}{t.amount}</p>
                                         <p className="text-[8px] text-gray-400 font-black uppercase tracking-[0.1em]">Pending</p>
                                     </div>
                                 </div>

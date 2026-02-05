@@ -1,18 +1,22 @@
 "use client";
 
-import { Wallet as WalletIcon, ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import { useLanguage } from "@/components/LanguageContext";
+import { translations } from "@/lib/translations";
 
 export default function Wallet() {
+    const { language } = useLanguage();
+    const t = translations[language];
+
     return (
         <div className="p-6 pb-24">
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">Wallet</h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">{t.balance}</h1>
 
             <div className="bg-gray-900 text-white p-8 rounded-[2rem] shadow-xl mb-8 relative overflow-hidden">
                 <p className="text-gray-400 text-sm mb-1">Available for Withdrawal</p>
-                <h2 className="text-4xl font-extrabold mb-6">₹0.00</h2>
+                <h2 className="text-4xl font-extrabold mb-6">{t.currencySymbol}0.00</h2>
                 <div className="flex gap-4">
                     <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-2xl text-sm font-bold flex-1 transition-all">
-                        Withdraw
+                        {t.withdraw}
                     </button>
                 </div>
             </div>
@@ -26,3 +30,4 @@ export default function Wallet() {
         </div>
     );
 }
+
