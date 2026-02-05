@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { UserPlus, Phone, Lock, User as UserIcon, Eye, EyeOff } from "lucide-react";
 import { useLanguage } from "@/components/LanguageContext";
 import { translations } from "@/lib/translations";
 
-export default function Signup() {
+function SignupForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { language } = useLanguage();
@@ -160,3 +160,12 @@ export default function Signup() {
         </div>
     );
 }
+
+export default function Signup() {
+    return (
+        <Suspense fallback={<div className="p-6 text-center">Loading...</div>}>
+            <SignupForm />
+        </Suspense>
+    );
+}
+
