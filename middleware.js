@@ -33,7 +33,6 @@ export default withAuth(
 // Define which paths are protected
 export const config = {
     matcher: [
-        "/",
         "/profile/:path*",
         "/admin/:path*",
         "/vip/:path*",

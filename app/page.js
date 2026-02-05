@@ -133,13 +133,6 @@ export default function Home() {
 
   if (status === "loading") return <div className="min-h-screen bg-[#f0faf2] flex items-center justify-center font-black text-green-600 animate-pulse uppercase tracking-[0.2em]">Loading...</div>;
 
-  if (!session) {
-    if (typeof window !== "undefined") {
-      router.push("/login");
-    }
-    return null;
-  }
-
   const isAdmin = session?.user?.role === "admin";
 
   return (
@@ -175,21 +168,30 @@ export default function Home() {
           >
             <Globe size={14} className="text-green-600" /> {language === "en" ? "English" : "العربية"}
           </button>
-          <div
-            onClick={() => router.push("/profile")}
-            className="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden cursor-pointer active:scale-90 transition-all flex items-center justify-center bg-green-50"
-          >
-            {!imgError ? (
-              <img
-                src="/avatar.jpg"
-                alt="Profile"
-                className="w-full h-full object-cover"
-                onError={() => setImgError(true)}
-              />
-            ) : (
+          {session ? (
+            <div
+              onClick={() => router.push("/profile")}
+              className="w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden cursor-pointer active:scale-90 transition-all flex items-center justify-center bg-green-50"
+            >
+              {!imgError ? (
+                <img
+                  src="/avatar.jpg"
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <UserIcon size={20} />
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => router.push("/login")}
+              className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all"
+            >
               <UserIcon size={20} />
-            )}
-          </div>
+            </button>
+          )}
         </div>
       </div>
 
