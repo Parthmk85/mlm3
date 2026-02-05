@@ -105,7 +105,7 @@ export default function PayAndJoin() {
                     </div>
                     <p className="text-sm font-bold text-gray-700">UPI ID: admin@upi</p>
                     <p className="text-xs text-gray-500 mt-1">Amount: ₹500</p>
-                </div>
+                </div>    
 
                 <div className="flex items-start p-3 bg-blue-50 text-blue-700 rounded-xl text-xs">
                     <Info className="mr-2 flex-shrink-0" size={16} />
