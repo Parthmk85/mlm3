@@ -10,6 +10,16 @@ export async function POST(req) {
             return NextResponse.json({ message: "No file provided" }, { status: 400 });
         }
 
+        if (process.env.CLOUDINARY_API_SECRET === "your_api_secret_here") {
+            return NextResponse.json({
+                message: "Cloudinary API Secret is missing in .env.local. Please add your real secret from the Cloudinary dashboard."
+            }, { status: 500 });
+        }
+
+        console.log("Using Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME);
+        console.log("Using API Key:", process.env.CLOUDINARY_API_KEY);
+        console.log("Secret length:", process.env.CLOUDINARY_API_SECRET?.length);
+
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
@@ -21,7 +31,10 @@ export async function POST(req) {
                     resource_type: "auto",
                 },
                 (error, result) => {
-                    if (error) reject(error);
+                    if (error) {
+                        console.error("Cloudinary upload_stream error:", error);
+                        reject(error);
+                    }
                     else resolve(result);
                 }
             ).end(buffer);
@@ -33,7 +46,9 @@ export async function POST(req) {
         });
 
     } catch (error) {
-        console.error("Upload error:", error);
-        return NextResponse.json({ message: "Upload failed" }, { status: 500 });
+        console.error("Upload API route error:", error);
+        return NextResponse.json({
+            message: error.message || "Upload failed"
+        }, { status: 500 });
     }
 }
